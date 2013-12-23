@@ -98,7 +98,24 @@ function 2d_battle_engine(RID, AID, STATUS){
 		}
 
 		this.activatePower = function(){
+			var activatedPower = this.tailArray.shift();
+			switch(activatedPower)
+			{
+				case 0:
+				{
 
+				}
+				break;
+				case 1:
+				{
+
+				}
+				case 2:
+				{
+
+				}
+				break;
+			}
 		}
 
 		this.move = function(dx , dy){
