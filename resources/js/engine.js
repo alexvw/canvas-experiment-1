@@ -101,7 +101,24 @@ function game_engine(){
 		}
 
 		this.activatePower = function(){
+			var activatedPower = this.tailArray.shift();
+			switch(activatedPower)
+			{
+				case 0:
+				{
 
+				}
+				break;
+				case 1:
+				{
+
+				}
+				case 2:
+				{
+
+				}
+				break;
+			}
 		}
 
 		this.move = function(dx , dy){
