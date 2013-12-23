@@ -8,8 +8,14 @@
 function input_object(callback){
 	var tc = callback; //function to pass input to. Abstracts input to be platform-dependent only here
 	var FLICK_TIMEOUT = 1000;
-	var TAP_DISTANCE = 50;
-	this.inputHandlers = function(){
+	var TAP_DISTANCE = 20;
+	var m_x1;
+	var m_x2;
+	var m_y1;
+	var m_y2;
+	var now;
+	
+	this.setup = function(){
 		//block defaults
 		// do nothing in the event handler except canceling the event
 		$(c).ondragstart = function(e) {
@@ -77,7 +83,7 @@ function input_object(callback){
 		.on('mousedown', function(e) {
 			e.preventDefault();
 			m_down = true;
-
+			now = new Date();
 			var position = $(c).position();
 			
 			//e.originalEvent.touches[0].pageX;
@@ -93,7 +99,7 @@ function input_object(callback){
 		.on('touchstart', function(e) {
 			e.preventDefault();
 			m_down = true;
-
+			now = new Date();
 			var position = $(c).position();
 				m_x1 = e.originalEvent.touches[0].pageX-position.left;
 				  m_y1 = e.originalEvent.touches[0].pageY-position.top;
@@ -116,9 +122,11 @@ function input_object(callback){
 			var position = $(c).position();
 				m_x2 = e.pageX-position.left;
 				  m_y2 = e.pageY-position.top;
-			  var distx = (m_x2 - m_x1) / ((frames - m1)+1);
-			  var disty = (m_y2 - m_y1) / ((frames - m1)+1);
-			  check(m_x2,m_y2,distx,disty);
+			  var distx = (m_x2 - m_x1) ;
+			  var disty = (m_y2 - m_y1) ;
+			  //check
+			  var elapsed = (new Date()).getTime() - now.getTime();
+			  check(m_x2,m_y2,distx,disty,elapsed);
 			  return false;
 		})
 		.on('touchend', function(e) {
@@ -127,18 +135,21 @@ function input_object(callback){
 			var position = $(c).position();
 				m_x2 = e.originalEvent.changedTouches[0].pageX-position.left;
 				  m_y2 = e.originalEvent.changedTouches[0].pageY-position.top;
-			  var distx = (m_x2 - m_x1) / ((frames - m1)+1);
-			  var disty = (m_y2 - m_y1) / ((frames - m1)+1);
-			  check(m_x2,m_y2,distx,disty);
+			  var distx = (m_x2 - m_x1) ;
+			  var disty = (m_y2 - m_y1) ;
+			  //check
+			  var elapsed = (new Date()).getTime() - now.getTime();
+			  check(m_x2,m_y2,distx,disty,elapsed);
 			  return false;
 		});
 		
 		function check(x, y, dx, dy, time){
+			var multi = time/10;
 			if (time < FLICK_TIMEOUT)
 				if (Math.sqrt((dx*dx)+(dy*dy)) < TAP_DISTANCE)
 					//call tap
-					tc(true, x, y, dx, dy, time);
-				else tc(false, x,y,dx,dy,time);
+					tc(true, x, y, dx/multi, dy/multi);
+				else tc(false, x,y,dx/multi,dy/multi);
 		}
 	}
 };

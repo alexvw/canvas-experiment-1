@@ -33,11 +33,12 @@
 					<br><button>Item1</button>
 					<br><button>Item2</button>
 					<br><button>Item3</button>
+					<br>Status:<div id="status">Loading...</div>
 				</article>
 			</div>
 			<div class="col-xs-12 col-sm-9 col-md-9">
 				<article id="canvas">
-					<canvas id="c">Sorry, your device does not support HTML5 Canvas.</canvas>
+					<canvas id="c" width=500 height=500>Sorry, your device does not support HTML5 Canvas.</canvas>
 				</article>
 			</div>
 		</div>

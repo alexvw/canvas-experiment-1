@@ -6,8 +6,11 @@
 //Experimental engine object. This prototype should not be instantiated, but instead is a 
 //superclass of engine objects, and contains all the generic functions
 
-function 2d_battle_engine(RID, AID, STATUS){
-	//engine prototype. Copy-pasted from axn, just an example for now
+function game_engine(){
+	//engine prototype. church.
+	
+	
+	//Below is Copy-pasted from axn, just an example for now
 	/*this.RPID = RID;
 	this.AttributeID = AID;
 	this.status = STATUS;
