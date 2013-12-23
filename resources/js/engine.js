@@ -70,8 +70,50 @@ function 2d_battle_engine(RID, AID, STATUS){
 	 * - distance
 	 * - force(object, dx, dy)?
 	 * 
-	 * 
-	 * - player object
+	 */
+
+	 function player(){
+	 	this.FRICTION = .5;
+	 	this.SPEED = 1;
+
+		this.x;
+		this.y;
+		this.dx;
+		this.dy;
+
+		this.tailArray = [];
+		this.color;
+		this.shape;
+
+		this.step = function(){
+
+
+
+			this.x += this.dx;
+			this.y += this.dy;
+
+			//FRICTION
+			this.dx = this.FRICTION*this.dy;
+			this.dy = this.FRICTION*this.dx;
+		}
+
+		this.activatePower = function(){
+
+		}
+
+		this.move = function(dx , dy){
+			this.dx += dx;
+			this.dy += dy;
+		}
+
+		this.draw = function(){
+
+		}
+
+
+	}
+	 
+	 /* - player object
 	 *   functions:
 	 *   - step()
 	 *   - draw()
@@ -92,6 +134,7 @@ function 2d_battle_engine(RID, AID, STATUS){
 	 *   objects:
 	 *   - x,y,dx,dy
 	 *   - health?
+	 *   -
 	 *   - lifetime delta
 	 *   
 	 * - scenery object prototype
