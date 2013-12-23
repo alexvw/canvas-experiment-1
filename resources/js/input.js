@@ -7,6 +7,8 @@
 
 function input_object(callback){
 	var tc = callback; //function to pass input to. Abstracts input to be platform-dependent only here
+	var FLICK_TIMEOUT = 1000;
+	var TAP_DISTANCE = 50;
 	this.inputHandlers = function(){
 		//block defaults
 		// do nothing in the event handler except canceling the event
@@ -116,7 +118,7 @@ function input_object(callback){
 				  m_y2 = e.pageY-position.top;
 			  var distx = (m_x2 - m_x1) / ((frames - m1)+1);
 			  var disty = (m_y2 - m_y1) / ((frames - m1)+1);
-			  tc(m_x2,m_y2,distx,disty);
+			  check(m_x2,m_y2,distx,disty);
 			  return false;
 		})
 		.on('touchend', function(e) {
@@ -127,9 +129,17 @@ function input_object(callback){
 				  m_y2 = e.originalEvent.changedTouches[0].pageY-position.top;
 			  var distx = (m_x2 - m_x1) / ((frames - m1)+1);
 			  var disty = (m_y2 - m_y1) / ((frames - m1)+1);
-			  tc(m_x2,m_y2,distx,disty);
+			  check(m_x2,m_y2,distx,disty);
 			  return false;
 		});
+		
+		function check(x, y, dx, dy, time){
+			if (time < FLICK_TIMEOUT)
+				if (Math.sqrt((dx*dx)+(dy*dy)) < TAP_DISTANCE)
+					//call tap
+					tc(true, x, y, dx, dy, time);
+				else tc(false, x,y,dx,dy,time);
+		}
 	}
 };
 
