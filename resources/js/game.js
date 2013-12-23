@@ -75,7 +75,7 @@ function experimental_game_engine(param) {
 function inputHandler(isTap, x, y, dx, dy){
 	if (isTap)
 		alert("Tap at "+x+","+y);
-	alert("Flick "+x+","+y+" "+dx+","+dy);
+	else alert("Flick "+x+","+y+" "+dx+","+dy);
 }
 //TODO: determine params
 function experimental_game_input(inputHandler) {

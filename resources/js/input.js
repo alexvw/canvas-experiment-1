@@ -9,11 +9,10 @@ function input_object(callback){
 	var tc = callback; //function to pass input to. Abstracts input to be platform-dependent only here
 	var FLICK_TIMEOUT = 1000;
 	var TAP_DISTANCE = 20;
-	var m_x1;
-	var m_x2;
-	var m_y1;
-	var m_y2;
+	var mouse1 = [0,0];
+	var mouse2 = [0,0];
 	var now;
+	var canvas = document.getElementById('c');
 	
 	this.setup = function(){
 		//block defaults
@@ -78,36 +77,30 @@ function input_object(callback){
 		    return false;
 		});*/
 		
+		function getMousePos(canvas, evt) {
+	        var rect = canvas.getBoundingClientRect();
+	        return [evt.clientX - rect.left,
+	  	          evt.clientY - rect.top];
+		}
+		
 		//mouse and touch events
 		$(c)
 		.on('mousedown', function(e) {
 			e.preventDefault();
 			m_down = true;
 			now = new Date();
-			var position = $(c).position();
-			
-			//e.originalEvent.touches[0].pageX;
-			
-				m_x1 = e.pageX-position.left;
-				  m_y1 = e.pageY-position.top;
-				  m_x2 = e.pageX-position.left;
-				  m_y2 = e.pageY-position.top;
-			
-			  m1 = frames;
-			  return false;
+			mouse1 = getMousePos(canvas, e);
+			return false;
 		})
 		.on('touchstart', function(e) {
 			e.preventDefault();
 			m_down = true;
 			now = new Date();
-			var position = $(c).position();
-				m_x1 = e.originalEvent.touches[0].pageX-position.left;
-				  m_y1 = e.originalEvent.touches[0].pageY-position.top;
-				  m_x2 = e.originalEvent.touches[0].pageX-position.left;
-				  m_y2 = e.originalEvent.touches[0].pageY-position.top;
+			var position = canvas.position();
+				mouse1[0] = e.originalEvent.touches[0].pageX-position.left;
+				mouse1[1] = e.originalEvent.touches[0].pageY-position.top;
 			
-			  m1 = frames;
-			  return false;
+			return false;
 		})/*
 		.mousemove(function(e) {
 			//if (m_down){
@@ -119,27 +112,25 @@ function input_object(callback){
 		.on('mouseup', function(e) {
 			e.preventDefault();
 			m_down = false;
-			var position = $(c).position();
-				m_x2 = e.pageX-position.left;
-				  m_y2 = e.pageY-position.top;
-			  var distx = (m_x2 - m_x1) ;
-			  var disty = (m_y2 - m_y1) ;
+			mouse2 = getMousePos(canvas, e);
+			  var distx = (mouse2[0] - mouse1[0]) ;
+			  var disty = (mouse2[1] - mouse1[1]) ;
 			  //check
 			  var elapsed = (new Date()).getTime() - now.getTime();
-			  check(m_x2,m_y2,distx,disty,elapsed);
+			  check(mouse2[0],mouse2[1],distx,disty,elapsed);
 			  return false;
 		})
 		.on('touchend', function(e) {
 			e.preventDefault();
 			m_down = false;
 			var position = $(c).position();
-				m_x2 = e.originalEvent.changedTouches[0].pageX-position.left;
-				  m_y2 = e.originalEvent.changedTouches[0].pageY-position.top;
-			  var distx = (m_x2 - m_x1) ;
-			  var disty = (m_y2 - m_y1) ;
+				mouse2[0] = e.originalEvent.changedTouches[0].pageX-position.left;
+				  mouse2[1] = e.originalEvent.changedTouches[0].pageY-position.top;
+			  var distx = (mouse2[0] - mouse1[0]) ;
+			  var disty = (mouse2[1] - mouse1[1]) ;
 			  //check
 			  var elapsed = (new Date()).getTime() - now.getTime();
-			  check(m_x2,m_y2,distx,disty,elapsed);
+			  check(mouse2[0],mouse2[1],distx,disty,elapsed);
 			  return false;
 		});
 		
@@ -153,4 +144,3 @@ function input_object(callback){
 		}
 	}
 };
-
