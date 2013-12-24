@@ -132,14 +132,23 @@ function game_engine(){
 		this.y += this.dy;
 
 		//FRICTION
-		this.dx = (1-this.FRICTION)*this.dy;
-		this.dy = (1-this.FRICTION)*this.dx;
+		this.dx = (1-this.friction)*this.dy;
+		this.dy = (1-this.friction)*this.dx;
+	}
+	
+	Player.prototype.accelerate = function(dx,dy){
+		this.dx += (dx *PLAYER_ACCEL);
+		this.dy =+ (dy * PLAYER_ACCEL);
 	}
 	
 	Player.prototype.draw = function(ctx,x,y){
 		//just this for now.  super quick bro
 		ctx.fillStyle=this.color;
 		ctx.fillRect(x-(this.s/2), y-(this.s/2), this.s, this.s);
+	}
+	
+	Player.prototype.getCoordinates = function(){
+		return [this.x,this.y];
 	}
 
 	Player.prototype.activatePower = function(){
@@ -163,13 +172,17 @@ function game_engine(){
 		}
 	}
 	
-		this.drawAll = function(context){
-			//draw background
-			//draw visible objects
-			//draw enemies
-			//draw player
-			this.thePlayer.draw(context, 150, 300);
-		}
+	this.playerInput = function(dx,dy){
+		this.thePlayer.accelerate(dx,dy);
+	}
+	
+	this.drawAll = function(context){
+		//draw background
+		//draw visible objects
+		//draw enemies
+		//draw player
+		this.thePlayer.draw(context, 150, 300);
+	}
 	 
 	 /* - player object
 	 *   functions:

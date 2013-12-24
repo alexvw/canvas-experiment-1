@@ -77,8 +77,12 @@ function gameObject(){
 				total += fps[i++];
 			}
 			real_fps = total/fps.length;
-			if (totalFrames % 10 == 0)
-				$('#status').html(totalFrames + " " + real_fps.toFixed(1));
+			
+			if (totalFrames % 3 == 0){
+				var coords = expEngine.thePlayer.getCoordinates();
+				$('#status').html("FPS:" + real_fps.toFixed(1) +" P:"+coords[0].toFixed(1)+", "+coords[1].toFixed(1));
+			}
+				
 		
 		//draw
 			expEngine.drawAll(this.context);
@@ -93,7 +97,7 @@ function gameObject(){
 	inputHandler = function(isTap, x, y, dx, dy){
 		if (isTap)
 			alert("Tap at "+x+","+y);
-		else alert("Flick "+x+","+y+" "+dx+","+dy);
+		else expEngine.playerInput(dx,dy);
 	};
 	
 	//start
