@@ -96,6 +96,7 @@ function gameObject(){
 	};
 	
 	inputHandler = function(isTap, x, y, dx, dy){
+		//alert("dx:"+dx+" dy:"+dy);
 		if (isTap)
 			alert("Tap at "+x+","+y);
 		else expEngine.playerInput(dx,dy);
