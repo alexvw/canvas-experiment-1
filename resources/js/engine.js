@@ -5,13 +5,21 @@
 
 //Experimental engine object. This prototype should not be instantiated, but instead is a 
 //superclass of engine objects, and contains all the generic functions
-
+var PLAYER_FRICTION = 0.05;
+var PLAYER_MAX_SPEED = 100;
+var PLAYER_ACCEL = 0.01;
 function game_engine(){
 	//engine prototype. church.
 	this.totalSteps = 0;
 	this.running = 0;
 	//maybe
 	//this.camera = function(){
+	
+	this.thePlayer = {};
+	
+	this.visibleObjects = [];
+	
+	this.enemies = [];
 	
 	this.init = function(){
 		this.running = 1;
@@ -88,68 +96,80 @@ function game_engine(){
 		//check collisions
 		//step objects
 			//step player
+			this.thePlayer.step();
 			//step enemies
 		
 		this.totalSteps++;
 	}
+	
+	this.createPlayer = function(name){
+		this.thePlayer = new Player(name);
+	}
 
-	/* function player(){
-	 	this.FRICTION = .5;
-	 	this.SPEED = 1;
+	function Player(name){
+	 	this.friction = PLAYER_FRICTION;
+	 	this.accel = PLAYER_ACCEL;
+	 	this.maxSpeed = PLAYER_MAX_SPEED;
 
-		this.x;
-		this.y;
-		this.dx;
-		this.dy;
+	 	this.name = name;
+		this.x = 0;
+		this.y = 0;
+		this.dx = 0;
+		this.dy = 0;
+		this.speed = 0;
+		
+		//size
+		this.s = 10;
 
 		this.tailArray = [];
-		this.color;
-		this.shape;
+		this.color = "#ffffff";
+		//not used for now
+		//this.shape;
+	}
 
-		this.step = function(){
+	Player.prototype.step = function(){
+		this.x += this.dx;
+		this.y += this.dy;
 
+		//FRICTION
+		this.dx = (1-this.FRICTION)*this.dy;
+		this.dy = (1-this.FRICTION)*this.dx;
+	}
+	
+	Player.prototype.draw = function(ctx,x,y){
+		//just this for now.  super quick bro
+		ctx.fillStyle=this.color;
+		ctx.fillRect(x-(this.s/2), y-(this.s/2), this.s, this.s);
+	}
 
-
-			this.x += this.dx;
-			this.y += this.dy;
-
-			//FRICTION
-			this.dx = this.FRICTION*this.dy;
-			this.dy = this.FRICTION*this.dx;
-		}
-
-		this.activatePower = function(){
-			var activatedPower = this.tailArray.shift();
-			switch(activatedPower)
+	Player.prototype.activatePower = function(){
+		var activatedPower = this.tailArray.shift();
+		switch(activatedPower)
+		{
+			case 0:
 			{
-				case 0:
-				{
 
-				}
-				break;
-				case 1:
-				{
-
-				}
-				case 2:
-				{
-
-				}
-				break;
 			}
+			break;
+			case 1:
+			{
+
+			}
+			case 2:
+			{
+
+			}
+			break;
 		}
-
-		this.move = function(dx , dy){
-			this.dx += dx;
-			this.dy += dy;
+	}
+	
+		this.drawAll = function(context){
+			//draw background
+			//draw visible objects
+			//draw enemies
+			//draw player
+			this.thePlayer.draw(context, 150, 300);
 		}
-
-		this.draw = function(){
-
-		}
-
-
-	}*/
 	 
 	 /* - player object
 	 *   functions:

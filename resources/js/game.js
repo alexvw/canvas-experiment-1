@@ -21,6 +21,12 @@ function gameObject(){
 	var f;
 	var fps = new Array(60,60,60,60,60,60,60,60,60,60,60,60,60,60,60
 			,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60);
+	var totalFrames = 0;
+	
+	var context;
+	var canvas;
+	var CANVAS_WIDTH;
+	var CANVAS_HEIGHT;
 	//TODO
 
 	/*
@@ -46,6 +52,10 @@ function gameObject(){
 		//input init
 		input.setup();
 		//game init
+		gameSetup();
+
+		c = document.getElementById('c');
+		canvasInit(c);
 		start();
 	};
 	//render loop
@@ -56,24 +66,27 @@ function gameObject(){
 		//calculations
 			//calculate FPS
 			var n = new Date().getTime();
-			l = d - n;
+			l = n - d;
 			f = (Math.abs(1000/l));
-			fps.push(f);
+			if (f < 100)
+				fps.push(f);
 			fps.shift();
-			d = new Date();
 			var total =0;
 			var i=0;
 			while (i<fps.length){
 				total += fps[i++];
 			}
 			real_fps = total/fps.length;
-			$('#status').html(real_fps);
+			if (totalFrames % 10 == 0)
+				$('#status').html(totalFrames + " " + real_fps.toFixed(1));
 		
 		//draw
+			expEngine.drawAll(this.context);
 		
 		//loop
 		d = new Date().getTime();
 		if (doLoop == true)
+			totalFrames++;
 		requestAnimFrame( renderLoop );
 	};
 	
@@ -86,9 +99,15 @@ function gameObject(){
 	//start
 	start = function(){
 		doLoop = true;
+		
 		$("#status").html("Started");
 		renderLoop();
 	};
+	//game setup
+	gameSetup = function(){
+		//create player
+		expEngine.createPlayer("Player 1");
+	}
 	//save to serialized object
 	save = function(){
 		
@@ -103,6 +122,19 @@ function gameObject(){
 	reset = function(){
 		
 	};	
+	canvasInit = function(canvas){
+		/*c.width = width-100;
+		c.height = height;*/
+		
+		canvas.onselectstart = function () { return false; } // ie
+		canvas.onmousedown = function () { return false; }// mozilla
+		canvas.onmousemove = function() { return false; }
+		
+	    this.context = canvas.getContext('2d');
+		
+		this.CANVAS_WIDTH = $('#c').width();
+		this.CANVAS_HEIGHT = $('#c').height();
+	}
 };
 
 	//requestAnim shim layer by Paul Irish
