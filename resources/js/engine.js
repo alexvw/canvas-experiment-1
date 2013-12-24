@@ -132,13 +132,13 @@ function game_engine(){
 		this.y += this.dy;
 
 		//FRICTION
-		this.dx = (1-this.friction)*this.dy;
-		this.dy = (1-this.friction)*this.dx;
+		this.dx = (1-this.friction)*this.dx;
+		this.dy = (1-this.friction)*this.dy;
 	}
 	
 	Player.prototype.accelerate = function(dx,dy){
-		this.dx += (dx *PLAYER_ACCEL);
-		this.dy =+ (dy * PLAYER_ACCEL);
+		this.dx += (dx * PLAYER_ACCEL);
+		this.dy += (dy * PLAYER_ACCEL);
 	}
 	
 	Player.prototype.draw = function(ctx,x,y){
