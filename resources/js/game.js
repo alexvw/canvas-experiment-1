@@ -49,13 +49,14 @@ function gameObject(){
 		//input init
 		input = new input_object(inputHandler);
 
+		c = document.getElementById('c');
+		canvasInit(c);
+
 		//input init
 		input.setup();
 		//game init
 		gameSetup();
 
-		c = document.getElementById('c');
-		canvasInit(c);
 		start();
 	};
 	//render loop
@@ -112,6 +113,8 @@ function gameObject(){
 	gameSetup = function(){
 		//create player
 		expEngine.createPlayer("Player 1");
+		//create viewport
+		expEngine.createViewPort(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
 	}
 	//save to serialized object
 	save = function(){
