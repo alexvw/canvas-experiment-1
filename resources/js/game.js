@@ -107,12 +107,13 @@ function gameObject(){
 		doLoop = true;
 		
 		$("#status").html("Started");
+		expEngine.start(this.context);
 		renderLoop();
 	};
 	//game setup
 	gameSetup = function(){
 		//create viewport
-		expEngine.createViewPort(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
+		//expEngine.createViewPort(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
 		//create player
 		expEngine.createPlayer("Player 1");
 		

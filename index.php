@@ -38,7 +38,7 @@
 			</div>
 			<div class="col-xs-12 col-sm-9 col-md-9">
 				<article id="canvas">
-					<canvas id="c" width=360 height=615>Sorry, your device does not support HTML5 Canvas.</canvas>
+					<canvas id="c" width=360 height=620>Sorry, your device does not support HTML5 Canvas.</canvas>
 				</article>
 			</div>
 		</div>
