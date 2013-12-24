@@ -116,14 +116,27 @@ function game_engine(){
 	function ViewPort(x,y,width,height){
 		this.x = x;
 		this.y = y;
+		this.dx = 0;
+		this.dy = 0;
+		this.accel = 1;
 		this.width = width;
 		this.height = height;
-		this.delay = 100;
+		this.delay = 120;
+		this.posX = [];
+		this.posY = [];
+		for (var i = 1; i <= this.delay; i++) {
+   			this.posX.push(0);
+		}
+		for (var j = 1; j <= this.delay; j++) {
+   			this.posY.push(0);
+		}
 	}
 
 	ViewPort.prototype.moveTowards = function(x,y){
-		this.x = (this.x*this.delay + x)/(this.delay+1);
-		this.y = (this.y*this.delay + y)/(this.delay+1);
+		this.posX.push(x);
+		this.posY.push(y);
+		this.x = this.posX.shift();
+		this.y = this.posY.shift();
 	}
 
 	ViewPort.prototype.isVisible = function(x,y,radius){
