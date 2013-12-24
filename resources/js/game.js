@@ -115,8 +115,12 @@ function gameObject(){
 		//create camera
 		expEngine.createCamera(0,0,this.CANVAS_WIDTH,this.CANVAS_HEIGHT);
 		//create player
-		expEngine.createPlayer("Player 1", this.thecamera);
-		
+		expEngine.createPlayer("Player 1");
+		expEngine.createEntity(0,0,500);
+		expEngine.createEntity(1,100,700);
+		expEngine.createEntity(1,-200,300);
+		expEngine.createEntity(0,20,900);
+
 	}
 	//save to serialized object
 	save = function(){

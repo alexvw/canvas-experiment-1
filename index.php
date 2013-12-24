@@ -7,7 +7,7 @@
 	<meta name="author" content="Alex Vander Woude, Nick Vander Woude">
 	<meta name="description" content="Experiment 1">
 	<!-- lets just go with this one -->
-	<meta name="viewport" content="width=device-width">
+	<meta name="viewport" content="width=360">
 	
 	<!-- cdn includes -->
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans:300,600' rel='stylesheet' type='text/css'>
@@ -29,11 +29,10 @@
 		<div class="row">
 			<div class="col-xs-12 col-sm-3 col-md-3">
 				<article id="menu-buttons">
-					Menu Goes here
-					<br><button>Item1</button>
-					<br><button>Item2</button>
-					<br><button>Item3</button>
-					<br>Status:<div id="status">Loading...</div>
+					<button>Item1</button>
+					<button>Item2</button>
+					<button>Item3</button>
+					<br><span id="status">Loading...</span>
 				</article>
 			</div>
 			<div class="col-xs-12 col-sm-9 col-md-9">

@@ -1,8 +1,11 @@
 article#menu-buttons{
-	 padding:10px;
+	 padding:5px;
 	 background-color:lightgrey;
 	 font-weight:bold;
 }
 canvas#c{
 	background-color:darkblue;
+}
+body {
+  -ms-touch-action: none;
 }

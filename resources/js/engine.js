@@ -5,9 +5,11 @@
 
 //Experimental engine object. This prototype should not be instantiated, but instead is a 
 //superclass of engine objects, and contains all the generic functions
-var PLAYER_FRICTION = 0.02;
+var PLAYER_FRICTION = 0.009;
 var PLAYER_MAX_SPEED = 100;
-var PLAYER_ACCEL = 0.09;
+var PLAYER_ACCEL = 0.13;
+
+var ENEMY_MOVEMENT = 3;
 var CANVAS_WIDTH = 360;
 var CANVAS_HEIGHT = 620;
 function game_engine(){
@@ -25,7 +27,6 @@ function game_engine(){
 	
 	this.bgCanvas = {};
 	this.bgPattern = {};
-
 	
 	this.init = function(context){
 		this.running = 1;
@@ -41,13 +42,12 @@ function game_engine(){
 		bgCanvas.width  = 20;
 		bgCanvas.height = 20;
 		bgContext = bgCanvas.getContext('2d');
-		bgContext.fillStyle="#0000FF";
+		bgContext.fillStyle="#aaaaFF";
 		bgContext.fillRect(0,0,20,20);
-		bgContext.fillStyle="#FF0000";
+		bgContext.fillStyle="#FFaaaa";
 		bgContext.fillRect(0,0,10,10);
-		bgContext.fillStyle="#00FF00";
+		bgContext.fillStyle="#aaFFaa";
 		bgContext.fillRect(10,10,10,10);
-		
 
 		//setup background pattern
 		this.bgPattern = context.createPattern(bgCanvas, "repeat");
@@ -129,8 +129,16 @@ function game_engine(){
 			this.thePlayer.step();
 			//step enemies
 
+			for (var a=0;a<this.visibleObjects.length;a++){
+	        	this.visibleObjects[a].step();
+	        }
+	        for (var a=0;a<this.enemies.length;a++){
+	        	this.enemies[a].step();
+	        }
 		//update camera
 		this.theCamera.moveTowards(this.thePlayer.x,this.thePlayer.y, this.thePlayer.dx, this.thePlayer.dy);
+
+
 		
 		this.totalSteps++;
 	}
@@ -151,22 +159,12 @@ function game_engine(){
 		this.accel = 1;
 		this.width = width;
 		this.height = height;
-		this.delay = 30;
-		this.posX = [];
-		this.posY = [];
-		for (var i = 1; i <= this.delay; i++) {
-   			this.posX.push(0);
-		}
-		for (var j = 1; j <= this.delay; j++) {
-   			this.posY.push(0);
-		}
+		this.delay = 5;
 	}
 
 	Camera.prototype.moveTowards = function(x,y,dx,dy){
-		this.posX.push(x);
-		this.posY.push(y);
-		this.x = ((this.posX.shift() + x + this.x) / 3) - dx;
-		this.y = ((this.posY.shift() + y + this.y) / 3) - dy;
+		this.x = ((x + this.x*this.delay) / (this.delay+1)) - dx;
+		this.y = ((y + this.y*this.delay) / (this.delay+1)) - dy;
 	}
 
 	Camera.prototype.isVisible = function(x,y,radius){
@@ -211,11 +209,6 @@ function game_engine(){
 		this.dy += (dy * PLAYER_ACCEL);
 	}
 	
-	/*Player.prototype.draw = function(ctx,x,y){
-		//just this for now.  super quick bro
-		ctx.fillStyle=this.color;
-		ctx.fillRect((x - this.Camera.x)-(this.s/2), (y - this.Camera.y)-(this.s/2), this.s, this.s);
-	}*/
 	Player.prototype.draw = function(ctx){
 		//just this for now.  super quick bro
 		ctx.fillStyle=this.color;
@@ -252,8 +245,49 @@ function game_engine(){
 		this.thePlayer.accelerate(dx,dy);
 	}
 	
-	this.drawAll = function(context){
+	function Entity(isEnemy,x,y){
+		this.movementSpeed = ENEMY_MOVEMENT;
+		
+		this.isEnemy = isEnemy;
+			
+		this.x = x;
+		this.y = y;
+		
+		//size
+		this.s = 10;
 
+		this.color = "#ffffff";
+		//not used for now
+		//this.shape;
+	}
+	
+	Entity.prototype.step = function(){
+		this.x += (Math.random()*2)-1;
+		this.y += (Math.random()*2)-1;
+	}
+	
+	Entity.prototype.draw = function(relativePlayer){
+		var eX = ( relativePlayer.x - this.x);
+		var eY = ( relativePlayer.y - this.y);
+		
+		context.fillStyle="#000";
+		context.fillRect(eX-10,eY-10,20,20);
+	}
+	
+	this.createEntity = function(type,x,y){
+		switch (type){
+		case 0:
+			this.visibleObjects.push(new Entity(false,x,y));
+			break;
+		case 1:
+			this.enemies.push(new Entity(true,x,y));
+			break;
+		}
+		
+	}
+	
+	this.drawAll = function(context){
+		var TP = this.thePlayer;
 		//draw background
 		context.fillStyle=this.bgPattern;
 		var bgX = 0-(this.theCamera.x % 20);
@@ -266,8 +300,15 @@ function game_engine(){
         context.translate(bgX, bgY);
 		//draw visible objects
 		//draw enemies
+        for (var a=0;a<this.visibleObjects.length;a++){
+        	this.visibleObjects[a].draw(TP);
+        }
+        for (var a=0;a<this.enemies.length;a++){
+        	this.enemies[a].draw(TP);
+        }
 		//draw player
-		this.thePlayer.draw(context);
+		TP.draw(context);
+
 	}
 	 
 	 /* - player object
