@@ -106,7 +106,7 @@ function game_engine(){
 	}
 	
 	this.createPlayer = function(name){
-		this.thePlayer = new Player(name);
+		this.thePlayer = new Player(name, this.theViewPort);
 	}
 
 	this.createViewPort = function(x,y,width,height){
@@ -131,10 +131,12 @@ function game_engine(){
 		else return true;
 	}
 
-	function Player(name){
+	function Player(name,viewPort){
 	 	this.friction = PLAYER_FRICTION;
 	 	this.accel = PLAYER_ACCEL;
 	 	this.maxSpeed = PLAYER_MAX_SPEED;
+
+	 	this.viewPort = viewPort;
 
 	 	this.name = name;
 		this.x = 0;
@@ -156,7 +158,7 @@ function game_engine(){
 		this.x += this.dx;
 		this.y += this.dy;
 
-		//FRICTION
+		//FRICTIONSSS
 		this.dx = (1-this.friction)*this.dy;
 		this.dy = (1-this.friction)*this.dx;
 	}
@@ -169,7 +171,7 @@ function game_engine(){
 	Player.prototype.draw = function(ctx,x,y){
 		//just this for now.  super quick bro
 		ctx.fillStyle=this.color;
-		ctx.fillRect((x - theViewPort.x)-(this.s/2), (y - theViewPort.y)-(this.s/2), this.s, this.s);
+		ctx.fillRect((x - this.viewPort.x)-(this.s/2), (y - this.viewPort.y)-(this.s/2), this.s, this.s);
 	}
 	
 	Player.prototype.getCoordinates = function(){
