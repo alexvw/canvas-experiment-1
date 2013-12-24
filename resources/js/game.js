@@ -1,136 +1,120 @@
 //Experiment 1 driver file. Requires engine.js and input.js to function, also relies on #c canvas element on page
+
 //@author avanderwoude, nvanderwoude
 
-//the game engine namespace object
-var expEngine;
-//the input namespace object
-var input;
-//game vars
-//TODO
-/*
- * Possible Objects:
- * - game settings
- *   - timer, score, lives
- *   - difficulty settings, offsets and individual timers
- * - render settings
- * 	 - quality, fps, dimensions, scales
- * - ???
- * - PRofit
- */
-
+//the game object, self executing	
 $( document ).ready(function() {
-	  init();
-	});
+		//lets go
+		var theGame = new gameObject();
+		theGame.init();
+		});
+function gameObject(){
+	var expEngine = {};
+	//the input namespace object
+	var input = {};
+	//game vars
+	var doLoop = false;
+	//used to calculate fps
+	var l;
+	var d;
+	var n;
+	var f;
+	var fps = new Array(60,60,60,60,60,60,60,60,60,60,60,60,60,60,60
+			,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60);
+	//TODO
 
-function init(){
-	//TODO: setup functions
+	/*
+	 * Possible Objects:
+	 * - game settings
+	 *   - timer, score, lives
+	 *   - difficulty settings, offsets and individual timers
+	 * - render settings
+	 * 	 - quality, fps, dimensions, scales
+	 * - ???
+	 * - PRofit
+	 */
 
-	//engine init
-	expEngine = expEngine || new experimental_game_engine("param");
-	expEngine.prototype = new game_engine();
-	//input init
-	input = input || new experimental_game_input(inputHandler);
-	input.prototype = new input_object();
+	this.init = function(){
+		//TODO: setup functions
 
-	//input init
-	input.setup();
-	//game init
-	gameStart();
-}
+		//engine init
+		expEngine = new game_engine("param");
+		expEngine.init();
+		//input init
+		input = new input_object(inputHandler);
 
-
-//TODO: determine params
-function experimental_game_engine(param) {
-	game_engine.call(this, param);
-	//TODO: set init params
+		//input init
+		input.setup();
+		//game init
+		start();
+	};
+	//render loop
+	renderLoop = function(){
+		//gamestep
+		expEngine.gameStep();
+		
+		//calculations
+			//calculate FPS
+			var n = new Date().getTime();
+			l = d - n;
+			f = (Math.abs(1000/l));
+			fps.push(f);
+			fps.shift();
+			d = new Date();
+			var total =0;
+			var i=0;
+			while (i<fps.length){
+				total += fps[i++];
+			}
+			real_fps = total/fps.length;
+			$('#status').html(real_fps);
+		
+		//draw
+		
+		//loop
+		d = new Date().getTime();
+		if (doLoop == true)
+		requestAnimFrame( renderLoop );
+	};
 	
-	//override example. May not use, idk
-	/*this.getData = function(){
-		if (!this.validation())
-			return false;
-		//object to be returned
-		//{"id",:"0","attributeType":"Name","name"="John Smith"}
-		var this_return = {
-				id: this.RPID,
-				attributeType: "FullName",
-				status: this.status,
-				data: {}
-		}
-		//check the status
-		//gather appropriate data
-		switch (this.status){
-		case ("new"):
-			this_return.data = {
-				fullName: $('#attr'+this.RPID+'-inputs').find('#FullName').val()
-				}
-			return this_return;
-			break;
-		}
-			//call generic validation
-			return this.prototype.getData.call(this, this_return);	
-	}*/
-}
-
-
-function inputHandler(isTap, x, y, dx, dy){
-	if (isTap)
-		alert("Tap at "+x+","+y);
-	else alert("Flick "+x+","+y+" "+dx+","+dy);
-}
-//TODO: determine params
-function experimental_game_input(inputHandler) {
-	input_object.call(this, inputHandler);
-	//TODO: set init params
+	inputHandler = function(isTap, x, y, dx, dy){
+		if (isTap)
+			alert("Tap at "+x+","+y);
+		else alert("Flick "+x+","+y+" "+dx+","+dy);
+	};
 	
-	//override example. May not use, idk
-	/*this.getData = function(){
-		if (!this.validation())
-			return false;
-		//object to be returned
-		//{"id",:"0","attributeType":"Name","name"="John Smith"}
-		var this_return = {
-				id: this.RPID,
-				attributeType: "FullName",
-				status: this.status,
-				data: {}
-		}
-		//check the status
-		//gather appropriate data
-		switch (this.status){
-		case ("new"):
-			this_return.data = {
-				fullName: $('#attr'+this.RPID+'-inputs').find('#FullName').val()
-				}
-			return this_return;
-			break;
-		}
-			//call generic validation
-			return this.prototype.getData.call(this, this_return);	
-	}*/
-}
-function gameStart(){
-	$("#status").html("Started");
-}
+	//start
+	start = function(){
+		doLoop = true;
+		$("#status").html("Started");
+		renderLoop();
+	};
+	//save to serialized object
+	save = function(){
+		
+	};
+	//start a certain level
+	startLevel = function(whichLevel){
+		
+	};
+	quit = function(){
+		
+	};
+	reset = function(){
+		
+	};	
+};
 
-//render loop
-function renderLoop(){
-	
-}
-//save to serialized object
-function save(){
-	
-}
-//start a certain level
-function startLevel(whichLevel){
-	
-}
-
-function quit(){
-	
-}
-
-function reset(){
-	
-}
-
-//...
+	//requestAnim shim layer by Paul Irish
+	//paulirish.com
+	//thx paul
+	window.requestAnimFrame = (function(){
+	return  window.requestAnimationFrame       || 
+	      window.webkitRequestAnimationFrame || 
+	      window.mozRequestAnimationFrame    || 
+	      window.oRequestAnimationFrame      || 
+	      window.msRequestAnimationFrame     || 
+	      function(/* function */ callback, /* DOMElement */ element){
+	        window.setTimeout(callback, 1000 / 60);
+	      };
+	})();

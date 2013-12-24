@@ -8,7 +8,15 @@
 
 function game_engine(){
 	//engine prototype. church.
+	this.totalSteps = 0;
+	this.running = 0;
+	//maybe
+	//this.camera = function(){
 	
+	this.init = function(){
+		this.running = 1;
+		this.totalSteps = 0;
+	}
 	
 	//Below is Copy-pasted from axn, just an example for now
 	/*this.RPID = RID;
@@ -74,8 +82,18 @@ function game_engine(){
 	 * - force(object, dx, dy)?
 	 * 
 	 */
+	
+	this.gameStep = function(){
+		//doublecheck for game bounds. Zero lives, game stopped, etc
+		//check collisions
+		//step objects
+			//step player
+			//step enemies
+		
+		this.totalSteps++;
+	}
 
-	 function player(){
+	/* function player(){
 	 	this.FRICTION = .5;
 	 	this.SPEED = 1;
 
@@ -131,7 +149,7 @@ function game_engine(){
 		}
 
 
-	}
+	}*/
 	 
 	 /* - player object
 	 *   functions:
