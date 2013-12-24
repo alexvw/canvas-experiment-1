@@ -5,9 +5,11 @@
 
 //Experimental engine object. This prototype should not be instantiated, but instead is a 
 //superclass of engine objects, and contains all the generic functions
-var PLAYER_FRICTION = 0.05;
+var PLAYER_FRICTION = 0.02;
 var PLAYER_MAX_SPEED = 100;
-var PLAYER_ACCEL = 0.01;
+var PLAYER_ACCEL = 0.09;
+var CANVAS_WIDTH = 360;
+var CANVAS_HEIGHT = 620;
 function game_engine(){
 	//engine prototype. church.
 	this.totalSteps = 0;
@@ -21,9 +23,37 @@ function game_engine(){
 	
 	this.enemies = [];
 	
-	this.init = function(){
+	this.bgCanvas = {};
+	this.bgPattern = {};
+
+	
+	this.init = function(context){
 		this.running = 1;
 		this.totalSteps = 0;
+	}
+	
+	this.start = function(context){
+		this.backgroundInit(context);
+	}
+	
+	this.backgroundInit = function(context){
+		bgCanvas = document.createElement('canvas');
+		bgCanvas.width  = 20;
+		bgCanvas.height = 20;
+		bgContext = bgCanvas.getContext('2d');
+		bgContext.fillStyle="#0000FF";
+		bgContext.fillRect(0,0,20,20);
+		bgContext.fillStyle="#FF0000";
+		bgContext.fillRect(0,0,10,10);
+		bgContext.fillStyle="#00FF00";
+		bgContext.fillRect(10,10,10,10);
+		
+
+		//setup background pattern
+		this.bgPattern = context.createPattern(bgCanvas, "repeat");
+		/*ctx.beginPath();
+		ctx.fillStyle = pattern;
+		ctx.fillRect(0,0,500,500);*/
 	}
 	
 	//Below is Copy-pasted from axn, just an example for now
@@ -145,13 +175,12 @@ function game_engine(){
 		else return true;
 	}
 
-	function Player(name,viewPort){
+	function Player(name, viewPort){
 	 	this.friction = PLAYER_FRICTION;
 	 	this.accel = PLAYER_ACCEL;
 	 	this.maxSpeed = PLAYER_MAX_SPEED;
 
 	 	this.viewPort = viewPort;
-
 	 	this.name = name;
 		this.x = 0;
 		this.y = 0;
@@ -175,7 +204,6 @@ function game_engine(){
 		//FRICTION
 		this.dx = (1-this.friction)*this.dx;
 		this.dy = (1-this.friction)*this.dy;
-
 	}
 	
 	Player.prototype.accelerate = function(dx,dy){
@@ -183,6 +211,11 @@ function game_engine(){
 		this.dy += (dy * PLAYER_ACCEL);
 	}
 	
+	/*Player.prototype.draw = function(ctx,x,y){
+		//just this for now.  super quick bro
+		ctx.fillStyle=this.color;
+		ctx.fillRect((x - this.viewPort.x)-(this.s/2), (y - this.viewPort.y)-(this.s/2), this.s, this.s);
+	}*/
 	Player.prototype.draw = function(ctx,x,y){
 		//just this for now.  super quick bro
 		ctx.fillStyle=this.color;
@@ -220,14 +253,21 @@ function game_engine(){
 	}
 	
 	this.drawAll = function(context){
+
 		//draw background
+		context.fillStyle=this.bgPattern;
+		var bgX = 0-(this.thePlayer.x % 20);
+		var bgY = 0-(this.thePlayer.y % 20);
+		// offset
+        context.translate(-bgX, -bgY);
+        //draw
+		context.fillRect(-20,-20,380,640);
+        // undo offset
+        context.translate(bgX, bgY);
 		//draw visible objects
 		//draw enemies
 		//draw player
-		context.fillStyle = "#0000A0";
-		context.fillRect(0,0,360,615);
-
-		this.thePlayer.draw(context, 150, 300);
+		this.thePlayer.draw(context, 180, 310);
 	}
 	 
 	 /* - player object
