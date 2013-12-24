@@ -118,11 +118,12 @@ function game_engine(){
 		this.y = y;
 		this.width = width;
 		this.height = height;
+		this.delay = 100;
 	}
 
 	ViewPort.prototype.moveTowards = function(x,y){
-		this.x = (this.x + x)/2;
-		this.y = (this.y + y)/2;
+		this.x = (this.x*this.delay + x)/(this.delay+1);
+		this.y = (this.y*this.delay + y)/(this.delay+1);
 	}
 
 	ViewPort.prototype.isVisible = function(x,y,radius){
@@ -172,7 +173,8 @@ function game_engine(){
 	Player.prototype.draw = function(ctx,x,y){
 		//just this for now.  super quick bro
 		ctx.fillStyle=this.color;
-		ctx.fillRect((x - this.viewPort.x)-(this.s/2), (y - this.viewPort.y)-(this.s/2), this.s, this.s);
+		ctx.fillRect(((this.x - this.viewPort.x)-(this.s/2)) + (this.viewPort.width/2),
+			((this.y - this.viewPort.y)-(this.s/2)) + (this.viewPort.height/2), this.s, this.s);
 	}
 	
 	Player.prototype.getCoordinates = function(){
@@ -209,6 +211,9 @@ function game_engine(){
 		//draw visible objects
 		//draw enemies
 		//draw player
+		context.fillStyle = "#0000A0";
+		context.fillRect(0,0,360,615);
+
 		this.thePlayer.draw(context, 150, 300);
 	}
 	 
