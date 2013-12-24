@@ -157,14 +157,23 @@ function game_engine(){
 		this.y += this.dy;
 
 		//FRICTION
-		this.dx = (1-this.FRICTION)*this.dy;
-		this.dy = (1-this.FRICTION)*this.dx;
+		this.dx = (1-this.friction)*this.dy;
+		this.dy = (1-this.friction)*this.dx;
+	}
+	
+	Player.prototype.accelerate = function(dx,dy){
+		this.dx += (dx *PLAYER_ACCEL);
+		this.dy =+ (dy * PLAYER_ACCEL);
 	}
 	
 	Player.prototype.draw = function(ctx,x,y){
 		//just this for now.  super quick bro
 		ctx.fillStyle=this.color;
 		ctx.fillRect((x - theViewPort.x)-(this.s/2), (y - theViewPort.y)-(this.s/2), this.s, this.s);
+	}
+	
+	Player.prototype.getCoordinates = function(){
+		return [this.x,this.y];
 	}
 
 	Player.prototype.activatePower = function(){
@@ -186,6 +195,10 @@ function game_engine(){
 			}
 			break;
 		}
+	}
+	
+	this.playerInput = function(dx,dy){
+		this.thePlayer.accelerate(dx,dy);
 	}
 	
 	this.drawAll = function(context){
