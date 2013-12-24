@@ -163,13 +163,13 @@ function game_engine(){
 		}
 	}
 	
-		this.drawAll = function(context){
-			//draw background
-			//draw visible objects
-			//draw enemies
-			//draw player
-			this.thePlayer.draw(context, 150, 300);
-		}
+	this.drawAll = function(context){
+		//draw background
+		//draw visible objects
+		//draw enemies
+		//draw player
+		this.thePlayer.draw(context, 150, 300);
+	}
 	 
 	 /* - player object
 	 *   functions:
