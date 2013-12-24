@@ -98,12 +98,37 @@ function game_engine(){
 			//step player
 			this.thePlayer.step();
 			//step enemies
+
+		//update camera
+		this.theViewPort.moveTowards(thePlayer.x,thePlayer.y);
 		
 		this.totalSteps++;
 	}
 	
 	this.createPlayer = function(name){
 		this.thePlayer = new Player(name);
+	}
+
+	this.createViewPort = function(x,y,width,height){
+		this.theViewPort = new ViewPort(x,y,width,height);
+	}
+
+	function ViewPort(x,y,width,height){
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+	}
+
+	ViewPort.prototype.moveTowards = function(x,y){
+		this.x = (this.x + x)/2;
+		this.y = (this.y + y)/2;
+	}
+
+	ViewPort.prototype.isVisible = function(x,y,radius){
+		if( x > (this.x + (this.width / 2)) ||  x < (this.x - (this.width / 2)) ||  y > (this.y + (this.height / 2)) ||  y < (this.y - (this.height / 2)))
+			return false;
+		else return true;
 	}
 
 	function Player(name){
@@ -139,7 +164,7 @@ function game_engine(){
 	Player.prototype.draw = function(ctx,x,y){
 		//just this for now.  super quick bro
 		ctx.fillStyle=this.color;
-		ctx.fillRect(x-(this.s/2), y-(this.s/2), this.s, this.s);
+		ctx.fillRect((x - theViewPort.x)-(this.s/2), (y - theViewPort.y)-(this.s/2), this.s, this.s);
 	}
 
 	Player.prototype.activatePower = function(){
