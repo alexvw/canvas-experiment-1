@@ -128,9 +128,9 @@ function game_engine(){
 			//step player
 			this.thePlayer.step();
 			//step enemies
-/*
+
 		//update camera
-		this.theViewPort.moveTowards(this.thePlayer.x,this.thePlayer.y);*/
+		this.theViewPort.moveTowards(this.thePlayer.x,this.thePlayer.y);
 		
 		this.totalSteps++;
 	}
@@ -139,7 +139,7 @@ function game_engine(){
 		this.thePlayer = new Player(name, this.theViewPort);
 	}
 
-	/*this.createViewPort = function(x,y,width,height){
+	this.createViewPort = function(x,y,width,height){
 		this.theViewPort = new ViewPort(x,y,width,height);
 	}
 
@@ -160,14 +160,14 @@ function game_engine(){
 		if( x > (this.x + (this.width / 2)) ||  x < (this.x - (this.width / 2)) ||  y > (this.y + (this.height / 2)) ||  y < (this.y - (this.height / 2)))
 			return false;
 		else return true;
-	}*/
+	}
 
-	function Player(name){
+	function Player(name, viewPort){
 	 	this.friction = PLAYER_FRICTION;
 	 	this.accel = PLAYER_ACCEL;
 	 	this.maxSpeed = PLAYER_MAX_SPEED;
 
-	 	//this.viewPort = viewPort;
+	 	this.viewPort = viewPort;
 	 	this.name = name;
 		this.x = 0;
 		this.y = 0;
