@@ -100,7 +100,7 @@ function game_engine(){
 			//step enemies
 
 		//update camera
-		this.theViewPort.moveTowards(thePlayer.x,thePlayer.y);
+		this.theViewPort.moveTowards(this.thePlayer.x,this.thePlayer.y);
 		
 		this.totalSteps++;
 	}
