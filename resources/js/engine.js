@@ -130,20 +130,20 @@ function game_engine(){
 			//step enemies
 
 		//update camera
-		this.theViewPort.moveTowards(this.thePlayer.x,this.thePlayer.y);
+		this.theCamera.moveTowards(this.thePlayer.x,this.thePlayer.y, this.thePlayer.dx, this.thePlayer.dy);
 		
 		this.totalSteps++;
 	}
 	
 	this.createPlayer = function(name){
-		this.thePlayer = new Player(name, this.theViewPort);
+		this.thePlayer = new Player(name, this.theCamera);
 	}
 
-	this.createViewPort = function(x,y,width,height){
-		this.theViewPort = new ViewPort(x,y,width,height);
+	this.createCamera = function(x,y,width,height){
+		this.theCamera = new Camera(x,y,width,height);
 	}
 
-	function ViewPort(x,y,width,height){
+	function Camera(x,y,width,height){
 		this.x = x;
 		this.y = y;
 		this.dx = 0;
@@ -151,7 +151,7 @@ function game_engine(){
 		this.accel = 1;
 		this.width = width;
 		this.height = height;
-		this.delay = 120;
+		this.delay = 30;
 		this.posX = [];
 		this.posY = [];
 		for (var i = 1; i <= this.delay; i++) {
@@ -162,25 +162,25 @@ function game_engine(){
 		}
 	}
 
-	ViewPort.prototype.moveTowards = function(x,y){
+	Camera.prototype.moveTowards = function(x,y,dx,dy){
 		this.posX.push(x);
 		this.posY.push(y);
-		this.x = this.posX.shift();
-		this.y = this.posY.shift();
+		this.x = ((this.posX.shift() + x + this.x) / 3) - dx;
+		this.y = ((this.posY.shift() + y + this.y) / 3) - dy;
 	}
 
-	ViewPort.prototype.isVisible = function(x,y,radius){
+	Camera.prototype.isVisible = function(x,y,radius){
 		if( x > (this.x + (this.width / 2)) ||  x < (this.x - (this.width / 2)) ||  y > (this.y + (this.height / 2)) ||  y < (this.y - (this.height / 2)))
 			return false;
 		else return true;
 	}
 
-	function Player(name, viewPort){
+	function Player(name, camera){
 	 	this.friction = PLAYER_FRICTION;
 	 	this.accel = PLAYER_ACCEL;
 	 	this.maxSpeed = PLAYER_MAX_SPEED;
 
-	 	this.viewPort = viewPort;
+	 	this.camera = camera;
 	 	this.name = name;
 		this.x = 0;
 		this.y = 0;
@@ -214,13 +214,13 @@ function game_engine(){
 	/*Player.prototype.draw = function(ctx,x,y){
 		//just this for now.  super quick bro
 		ctx.fillStyle=this.color;
-		ctx.fillRect((x - this.viewPort.x)-(this.s/2), (y - this.viewPort.y)-(this.s/2), this.s, this.s);
+		ctx.fillRect((x - this.Camera.x)-(this.s/2), (y - this.Camera.y)-(this.s/2), this.s, this.s);
 	}*/
-	Player.prototype.draw = function(ctx,x,y){
+	Player.prototype.draw = function(ctx){
 		//just this for now.  super quick bro
 		ctx.fillStyle=this.color;
-		ctx.fillRect(((this.x - this.viewPort.x)-(this.s/2)) + (this.viewPort.width/2),
-			((this.y - this.viewPort.y)-(this.s/2)) + (this.viewPort.height/2), this.s, this.s);
+		ctx.fillRect(((this.x - this.camera.x)-(this.s/2)) + (this.camera.width/2),
+			((this.y - this.camera.y)-(this.s/2)) + (this.camera.height/2), this.s, this.s);
 	}
 	
 	Player.prototype.getCoordinates = function(){
@@ -256,18 +256,18 @@ function game_engine(){
 
 		//draw background
 		context.fillStyle=this.bgPattern;
-		var bgX = 0-(this.thePlayer.x % 20);
-		var bgY = 0-(this.thePlayer.y % 20);
+		var bgX = 0-(this.theCamera.x % 20);
+		var bgY = 0-(this.theCamera.y % 20);
 		// offset
         context.translate(-bgX, -bgY);
         //draw
-		context.fillRect(-20,-20,380,640);
+		context.fillRect(-80,-80,440,700);
         // undo offset
         context.translate(bgX, bgY);
 		//draw visible objects
 		//draw enemies
 		//draw player
-		this.thePlayer.draw(context, 180, 310);
+		this.thePlayer.draw(context);
 	}
 	 
 	 /* - player object

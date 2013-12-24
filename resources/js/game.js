@@ -112,10 +112,10 @@ function gameObject(){
 	};
 	//game setup
 	gameSetup = function(){
-		//create viewport
-		expEngine.createViewPort(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
+		//create camera
+		expEngine.createCamera(0,0,this.CANVAS_WIDTH,this.CANVAS_HEIGHT);
 		//create player
-		expEngine.createPlayer("Player 1", this.theViewPort);
+		expEngine.createPlayer("Player 1", this.thecamera);
 		
 	}
 	//save to serialized object
