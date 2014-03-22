@@ -96,7 +96,7 @@ function input_object(callback){
 			e.preventDefault();
 			m_down = true;
 			now = new Date();
-			var position = canvas.position();
+			var position = $(c).position();
 				mouse1[0] = e.originalEvent.touches[0].pageX-position.left;
 				mouse1[1] = e.originalEvent.touches[0].pageY-position.top;
 			

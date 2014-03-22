@@ -12,11 +12,12 @@ var PLAYER_ACCEL = 0.13;
 var ENEMY_MOVEMENT = 3;
 var CANVAS_WIDTH = 360;
 var CANVAS_HEIGHT = 620;
+
 function game_engine(){
 	//engine prototype. church.
 	this.totalSteps = 0;
 	this.running = 0;
-	//maybe
+	var eCount=0;
 	//this.camera = function(){
 	
 	this.thePlayer = {};
@@ -27,6 +28,8 @@ function game_engine(){
 	
 	this.bgCanvas = {};
 	this.bgPattern = {};
+	
+	this.collideHandler = {};
 	
 	this.init = function(context){
 		this.running = 1;
@@ -42,11 +45,13 @@ function game_engine(){
 		bgCanvas.width  = 20;
 		bgCanvas.height = 20;
 		bgContext = bgCanvas.getContext('2d');
-		bgContext.fillStyle="#aaaaFF";
-		bgContext.fillRect(0,0,20,20);
-		bgContext.fillStyle="#FFaaaa";
+		bgContext.fillStyle="#8CCF49";
 		bgContext.fillRect(0,0,10,10);
-		bgContext.fillStyle="#aaFFaa";
+		bgContext.fillStyle="#AAD55E";
+		bgContext.fillRect(0,10,10,10);
+		bgContext.fillStyle="#76AE32";
+		bgContext.fillRect(10,0,10,10);
+		bgContext.fillStyle="#679B40";
 		bgContext.fillRect(10,10,10,10);
 
 		//setup background pattern
@@ -134,17 +139,40 @@ function game_engine(){
 	        }
 	        for (var a=0;a<this.enemies.length;a++){
 	        	this.enemies[a].step();
+				//brute force collision
+				if (this.collision(this.thePlayer, this.enemies[a]))
+					this.collideHandler(this.thePlayer, this.enemies[a]);
 	        }
 		//update camera
 		this.theCamera.moveTowards(this.thePlayer.x,this.thePlayer.y, this.thePlayer.dx, this.thePlayer.dy);
-
 
 		
 		this.totalSteps++;
 	}
 	
+	this.collision = function(obj1, obj2){
+	var gap = distance(obj1.x, obj1.y, obj2.x, obj2.y);
+	var edge = obj1.s/2 + obj2.s/2 +3;
+		if (gap < edge)
+			return true;
+		else return false;
+	}
+	
 	this.createPlayer = function(name){
 		this.thePlayer = new Player(name, this.theCamera);
+	}
+	
+	this.kill = function(objectK){
+		var index = -1;
+		for (var a=0;a<this.enemies.length;a++){
+	        	if (objectK === this.enemies[a])
+					index = a;
+			}
+		if (index != -1)
+		{
+			objectK.kill(this.thePlayer);
+			this.enemies.splice(index,1);
+		}
 	}
 
 	this.createCamera = function(x,y,width,height){
@@ -159,7 +187,7 @@ function game_engine(){
 		this.accel = 1;
 		this.width = width;
 		this.height = height;
-		this.delay = 5;
+		this.delay = 1;
 	}
 
 	Camera.prototype.moveTowards = function(x,y,dx,dy){
@@ -202,6 +230,7 @@ function game_engine(){
 		//FRICTION
 		this.dx = (1-this.friction)*this.dx;
 		this.dy = (1-this.friction)*this.dy;
+		
 	}
 	
 	Player.prototype.accelerate = function(dx,dy){
@@ -212,8 +241,10 @@ function game_engine(){
 	Player.prototype.draw = function(ctx){
 		//just this for now.  super quick bro
 		ctx.fillStyle=this.color;
-		ctx.fillRect(((this.x - this.camera.x)-(this.s/2)) + (this.camera.width/2),
-			((this.y - this.camera.y)-(this.s/2)) + (this.camera.height/2), this.s, this.s);
+		//ctx.fillRect(((this.x - this.camera.x)-(this.s/2)) + (this.camera.width/2),	((this.y - this.camera.y)-(this.s/2)) + (this.camera.height/2), this.s, this.s);
+	
+		ctx.fillRect(CANVAS_WIDTH/2-(this.s/2), CANVAS_HEIGHT/2 - (this.s/2), this.s, this.s); 
+	
 	}
 	
 	Player.prototype.getCoordinates = function(){
@@ -247,8 +278,18 @@ function game_engine(){
 	
 	function Entity(isEnemy,x,y){
 		this.movementSpeed = ENEMY_MOVEMENT;
-		
+		this.id = ++eCount;
 		this.isEnemy = isEnemy;
+		var colors = new Array(
+		"#F79400",
+		"#009AC0",
+		"#1605D8",
+		"#BE00BE",
+		"#E20000",
+		"#C91B4B",
+		"#00DDBA",
+		"#A400E4",
+		"#5703D5");
 			
 		this.x = x;
 		this.y = y;
@@ -256,22 +297,35 @@ function game_engine(){
 		//size
 		this.s = 10;
 
-		this.color = "#ffffff";
+		if (this.isEnemy){
+			this.color = colors[(this.id%colors.length)];
+		}
+		else
+			this.color = "#DDD";
 		//not used for now
 		//this.shape;
 	}
 	
+	Entity.prototype.kill = function(pp){
+		var eX = ( pp.x - this.x);
+		var eY = ( pp.y - this.y);
+		
+		context.fillStyle="#f00";
+		context.fillRect(eX-15+(CANVAS_WIDTH/2),eY-15+(CANVAS_HEIGHT/2),30,30);
+			//for (this.enemies.indexOf(this);
+	}
+	
 	Entity.prototype.step = function(){
-		this.x += (Math.random()*2)-1;
-		this.y += (Math.random()*2)-1;
+		//this.x += (Math.random()*2)-1;
+		//this.y += (Math.random()*2)-1;
 	}
 	
 	Entity.prototype.draw = function(relativePlayer){
 		var eX = ( relativePlayer.x - this.x);
 		var eY = ( relativePlayer.y - this.y);
 		
-		context.fillStyle="#000";
-		context.fillRect(eX-10,eY-10,20,20);
+		context.fillStyle=this.color;
+		context.fillRect(eX-10+(CANVAS_WIDTH/2),eY-10+(CANVAS_HEIGHT/2),20,20);
 	}
 	
 	this.createEntity = function(type,x,y){
@@ -295,7 +349,7 @@ function game_engine(){
 		// offset
         context.translate(-bgX, -bgY);
         //draw
-		context.fillRect(-80,-80,440,700);
+		context.fillRect(-80,-80,480,780);
         // undo offset
         context.translate(bgX, bgY);
 		//draw visible objects
@@ -308,7 +362,28 @@ function game_engine(){
         }
 		//draw player
 		TP.draw(context);
+		
+		this.drawIndicators(context);
 
+	}
+	
+	this.drawIndicators = function(ctx){
+		var px = this.thePlayer.x;
+		var py = this.thePlayer.y;
+		
+		
+			for (var a=0;a<this.enemies.length;a++){
+					var ddx = px - this.enemies[a].x;
+					var ddy = py - this.enemies[a].y;
+					
+					var angle = Math.atan2(ddy, ddx);
+					ctx.beginPath();
+					ctx.arc(CANVAS_WIDTH/2, CANVAS_HEIGHT/2, 30, angle-0.2, angle+0.2);
+			ctx.lineWidth = 3;
+		  ctx.strokeStyle = this.enemies[a].color;
+		  ctx.stroke();
+					
+				}
 	}
 	 
 	 /* - player object
@@ -350,4 +425,8 @@ function game_engine(){
 	 *   
 	 */
 };
+
+function distance(x1,y1,x2,y2){
+	 return Math.sqrt(((x1 - x2)*(x1 - x2)) + ((y1 - y2)*(y1 - y2)));
+}
 

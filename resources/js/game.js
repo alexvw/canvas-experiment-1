@@ -4,6 +4,7 @@
 
 //the game object, self executing	
 $( document ).ready(function() {
+		window.resizeTo(340,640);
 		//lets go
 		var theGame = new gameObject();
 		theGame.init();
@@ -27,6 +28,9 @@ function gameObject(){
 	var canvas;
 	var CANVAS_WIDTH;
 	var CANVAS_HEIGHT;
+	
+	var timeLimit = 100;
+	var score = 0;
 	//TODO
 
 	/*
@@ -56,11 +60,17 @@ function gameObject(){
 		input.setup();
 		//game init
 		gameSetup();
+		
+		score = 0;
+		timeLimit = 3000;
 
 		start();
 	};
 	//render loop
 	renderLoop = function(){
+	
+	if (timeLimit - totalFrames < 1)
+		stop();
 		//gamestep
 		expEngine.gameStep();
 		
@@ -80,8 +90,8 @@ function gameObject(){
 			real_fps = total/fps.length;
 			
 			if (totalFrames % 3 == 0){
-				var coords = expEngine.thePlayer.getCoordinates();
-				$('#status').html("FPS:" + real_fps.toFixed(1) +" P:"+coords[0].toFixed(1)+", "+coords[1].toFixed(1));
+				//var coords = expEngine.thePlayer.getCoordinates();
+				$('#status').html("Time Left:" + ((timeLimit-totalFrames)/60).toFixed(1) +"  Score: "+score.toFixed(0));
 			}
 				
 		
@@ -90,15 +100,18 @@ function gameObject(){
 		
 		//loop
 		d = new Date().getTime();
-		if (doLoop == true)
+		if (doLoop == true){
 			totalFrames++;
 		requestAnimFrame( renderLoop );
+		}
 	};
+	
+	
 	
 	inputHandler = function(isTap, x, y, dx, dy){
 		//alert("dx:"+dx+" dy:"+dy);
 		if (isTap)
-			alert("Tap at "+x+","+y);
+			;//alert("Tap at "+x+","+y);
 		else expEngine.playerInput(dx,dy);
 	};
 	
@@ -110,16 +123,21 @@ function gameObject(){
 		expEngine.start(this.context);
 		renderLoop();
 	};
+	stop = function(){
+		$('#status').html("Time's Up! Final Score: "+score.toFixed(0));
+		doLoop = false;
+		$(c).hide();
+	}
 	//game setup
 	gameSetup = function(){
 		//create camera
 		expEngine.createCamera(0,0,this.CANVAS_WIDTH,this.CANVAS_HEIGHT);
 		//create player
 		expEngine.createPlayer("Player 1");
-		expEngine.createEntity(0,0,500);
-		expEngine.createEntity(1,100,700);
-		expEngine.createEntity(1,-200,300);
-		expEngine.createEntity(0,20,900);
+		expEngine.createEntity(1,0,260);
+		//set collisionHandler
+		
+		expEngine.collideHandler = this.handleCollision;
 
 	}
 	//save to serialized object
@@ -148,6 +166,29 @@ function gameObject(){
 		
 		this.CANVAS_WIDTH = $('#c').width();
 		this.CANVAS_HEIGHT = $('#c').height();
+	};
+	kill = function(objToKill){
+	
+	var objType = objToKill.constructor.name;
+	if (objType == "Entity"){
+			score += 1;
+			timeLimit += (300/score);
+			expEngine.kill(objToKill);
+			expEngine.createEntity(1,(Math.random()*1000)-500,(Math.random()*1000)-500);
+			expEngine.createEntity(1,(Math.random()*1000)-500,(Math.random()*1000)-500);
+		}
+	}
+	
+	//interactive game functions
+	handleCollision = function(obj1, obj2){
+		var obj1Type = obj1.constructor.name;
+		var obj2Type = obj2.constructor.name;
+		//switch (obj1Type+obj2Type){
+			//do something
+		//}
+		//alert("COLLISION: " + obj1Type + " with " + obj2Type);
+		//do something about the collision
+			kill(obj2);
 	}
 };
 

@@ -24,24 +24,12 @@
 	<link href="resources/css/ui.css" rel="stylesheet">
 </head>
 <body>
-<section class="menu" id="main-menu">
-	<div class="container">
-		<div class="row">
-			<div class="col-xs-12 col-sm-3 col-md-3">
-				<article id="menu-buttons">
-					<button>Item1</button>
-					<button>Item2</button>
-					<button>Item3</button>
-					<br><span id="status">Loading...</span>
-				</article>
-			</div>
-			<div class="col-xs-12 col-sm-9 col-md-9">
-				<article id="canvas">
-					<canvas id="c" width=360 height=620>Sorry, your device does not support HTML5 Canvas.</canvas>
-				</article>
-			</div>
-		</div>
-	</div>
+	<section class="menu" id="main-menu">
+		<article id="canvas">
+			<canvas id="c" width=360 height=620>Sorry, your device does not support HTML5 Canvas.</canvas>
+		</article>
+		<span id="status">Loading...</span>
+	</section>
 </body>
 
 <!-- footer includes for better loading-->
