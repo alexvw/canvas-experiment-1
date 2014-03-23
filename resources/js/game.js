@@ -91,7 +91,7 @@ function gameObject(){
 			
 			if (totalFrames % 3 == 0){
 				//var coords = expEngine.thePlayer.getCoordinates();
-				$('#status').html("Time Left:" + ((timeLimit-totalFrames)/60).toFixed(1) +"  Score: "+score.toFixed(0));
+				$('#status').html("Time Left: " + ((timeLimit-totalFrames)/60).toFixed(1) +"  Score: "+score.toFixed(0));
 			}
 				
 		
@@ -124,8 +124,12 @@ function gameObject(){
 		renderLoop();
 	};
 	stop = function(){
-		$('#status').html("Time's Up! Final Score: "+score.toFixed(0));
 		doLoop = false;
+		setTimeout(end,250);
+	}
+	end = function(){
+		$('#status').html("<br><br><h3>Time's Up! Final Score: "+score.toFixed(0)+"</h3><br>"+
+		"<a onclick='location.reload(true)'> Try Again </a>");
 		$(c).hide();
 	}
 	//game setup
@@ -191,6 +195,16 @@ function gameObject(){
 			kill(obj2);
 	}
 };
+
+		$(c)
+		.on('mouseup', function(e) {
+			$('span#notify').hide();
+			$( this ).unbind( event );
+		})
+		.on('touchend', function(e) {
+			$('span#notify').hide();
+			$( this ).unbind( event );
+		});
 
 	//requestAnim shim layer by Paul Irish
 	//paulirish.com

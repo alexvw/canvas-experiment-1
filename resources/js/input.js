@@ -99,7 +99,6 @@ function input_object(callback){
 			var position = $(c).position();
 				mouse1[0] = e.originalEvent.touches[0].pageX-position.left;
 				mouse1[1] = e.originalEvent.touches[0].pageY-position.top;
-			
 			return false;
 		})/*
 		.mousemove(function(e) {
@@ -130,6 +129,8 @@ function input_object(callback){
 			  var disty = (mouse2[1] - mouse1[1]) ;
 			  //check
 			  var elapsed = (new Date()).getTime() - now.getTime();
+			  
+			  
 			  check(mouse2[0],mouse2[1],distx,disty,elapsed);
 			  return false;
 		});
@@ -137,10 +138,17 @@ function input_object(callback){
 		function check(x, y, dx, dy, time){
 			var multi = time/10;
 			if (time < FLICK_TIMEOUT)
-				if (Math.sqrt((dx*dx)+(dy*dy)) < TAP_DISTANCE)
+				if (Math.sqrt((dx*dx)+(dy*dy)) < TAP_DISTANCE){
+					//alert("Tap: " +x+ ", "+ y + " / "+ dx/multi+", "+ dy/multi +" / "+time);
 					//call tap
-					tc(true, x, y, dx/multi, dy/multi);
-				else tc(false, x,y,dx/multi,dy/multi);
+					tc(true, x, y, -dx/multi, -dy/multi);
+				}
+					
+				else{
+				tc(false, x,y,-dx/multi,-dy/multi);
+					//alert("swipe: " +x+ ", "+ y + " / "+ dx/multi +", "+ dy/multi +" / "+time);
+					
+				}
 		}
 	}
 };

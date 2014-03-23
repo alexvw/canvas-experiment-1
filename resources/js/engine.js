@@ -10,8 +10,8 @@ var PLAYER_MAX_SPEED = 100;
 var PLAYER_ACCEL = 0.13;
 
 var ENEMY_MOVEMENT = 3;
-var CANVAS_WIDTH = 360;
-var CANVAS_HEIGHT = 620;
+var CANVAS_WIDTH = 370;
+var CANVAS_HEIGHT = 600;
 
 function game_engine(){
 	//engine prototype. church.
@@ -281,11 +281,9 @@ function game_engine(){
 		this.id = ++eCount;
 		this.isEnemy = isEnemy;
 		var colors = new Array(
-		"#F79400",
 		"#009AC0",
 		"#1605D8",
 		"#BE00BE",
-		"#E20000",
 		"#C91B4B",
 		"#00DDBA",
 		"#A400E4",
@@ -321,11 +319,20 @@ function game_engine(){
 	}
 	
 	Entity.prototype.draw = function(relativePlayer){
-		var eX = ( relativePlayer.x - this.x);
-		var eY = ( relativePlayer.y - this.y);
+		var eX = ( relativePlayer.x - this.x)-15+(CANVAS_WIDTH/2);
+		var eY = ( relativePlayer.y - this.y)-15+(CANVAS_HEIGHT/2);
 		
-		context.fillStyle=this.color;
-		context.fillRect(eX-10+(CANVAS_WIDTH/2),eY-10+(CANVAS_HEIGHT/2),20,20);
+		context.beginPath();
+		context.moveTo(eX,eY);
+		context.lineTo(eX+30,eY);
+		context.lineTo(eX+30,eY+30);
+		context.lineTo(eX,eY+30);
+		context.lineTo(eX,eY);
+		context.lineWidth = 4;
+		  context.strokeStyle = this.color;
+		context.stroke();
+		
+		//context.fillRect(eX-10+(CANVAS_WIDTH/2),eY-10+(CANVAS_HEIGHT/2),20,20);
 	}
 	
 	this.createEntity = function(type,x,y){
@@ -378,7 +385,7 @@ function game_engine(){
 					
 					var angle = Math.atan2(ddy, ddx);
 					ctx.beginPath();
-					ctx.arc(CANVAS_WIDTH/2, CANVAS_HEIGHT/2, 30, angle-0.2, angle+0.2);
+					ctx.arc(CANVAS_WIDTH/2, CANVAS_HEIGHT/2, 40, angle-0.14, angle+0.14);
 			ctx.lineWidth = 3;
 		  ctx.strokeStyle = this.enemies[a].color;
 		  ctx.stroke();

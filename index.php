@@ -25,8 +25,11 @@
 </head>
 <body>
 	<section class="menu" id="main-menu">
-		<article id="canvas">
-			<canvas id="c" width=360 height=620>Sorry, your device does not support HTML5 Canvas.</canvas>
+		<article id="canvas" >
+			<canvas id="c" width=370 height=610 ontouchstart="touchStart(event);"
+  ontouchmove="touchMove(event);"
+  ontouchend="touchEnd(event);"
+  ontouchcancel="touchCancel(event);">Sorry, your device does not support HTML5 Canvas.</canvas>
 		</article>
 		<span id="status">Loading...</span>
 	</section>
